@@ -600,7 +600,7 @@
     <!-- 主要卡片容器 -->
     <div class="container">
         <header>
-            <h1><i class="fas fa-drum"></i> 雙溪高中校歌太鼓達人</h1>
+            <h1><i class="fas fa-drum"></i> 新北市立雙溪高中校歌太鼓達人</h1>
             <p class="subtitle">SXHS School Song Taiko no Tatsujin</p>
         </header>
 
@@ -665,9 +665,10 @@
             <div class="tool-group">
                 <label for="scroll-speed-select"><i class="fas fa-gauge-high"></i> 流速：</label>
                 <select id="scroll-speed-select" class="tool-select">
-                    <option value="1.0">1.0x</option>
-                    <option value="1.2" selected>1.2x</option>
-                    <option value="1.5">1.5x</option>
+                    <option value="0.8">0.8x (慢速)</option>
+                    <option value="1.0" selected>1.0x (推薦)</option>
+                    <option value="1.2">1.2x (進階)</option>
+                    <option value="1.5">1.5x (急速)</option>
                 </select>
             </div>
             <div class="tool-group">
@@ -830,7 +831,7 @@
         }
 
         // ====================================================
-        // 太鼓達人核心遊戲邏輯
+        // 太鼓達人核心遊戲邏輯 (對齊「參考速度用.html」時間點與極致體感流速)
         // ====================================================
         const taikoCanvas = document.getElementById('taiko-canvas');
         let tCtx = null;
@@ -842,40 +843,67 @@
         let isTaikoPaused = false;
         let taikoAnimFrame = null;
         let taikoOffset = -0.15;
-        let scrollSpeedMultiplier = 1.2;
+        let scrollSpeedMultiplier = 1.0;
 
         function getHitX() {
             if (!taikoCanvas) return 125;
             return Math.min(125, Math.max(80, taikoCanvas.width * 0.2));
         }
 
+        // 依據「參考速度用.html」LyricsData 精準對齊拍點
         const mp3RealBeatmap = [
+            // 前奏熱身鼓點
             { time: 2.00, type: 'don', text: "咚" }, { time: 3.20, type: 'ka', text: "咔" },
             { time: 4.40, type: 'don', text: "咚" }, { time: 5.60, type: 'ka', text: "咔" },
             { time: 6.80, type: 'don', text: "咚" }, { time: 8.00, type: 'ka', text: "咔" },
             { time: 9.20, type: 'don', text: "咚" }, { time: 10.00, type: 'ka', text: "咔" },
-            { time: 10.80, type: 'don', text: "青" }, { time: 11.35, type: 'don', text: "山" }, { time: 11.90, type: 'don', text: "秀" }, { time: 12.45, type: 'don', text: "麗" },
-            { time: 13.00, type: 'don', text: "碧" }, { time: 13.50, type: 'don', text: "波" }, { time: 14.00, type: 'don', text: "蕩" }, { time: 14.50, type: 'don', text: "漾" },
-            { time: 14.90, type: 'don', text: "雙" }, { time: 15.40, type: 'don', text: "溪" }, { time: 15.90, type: 'don', text: "環" }, { time: 16.40, type: 'don', text: "抱" },
-            { time: 17.00, type: 'don', text: "源" }, { time: 17.50, type: 'don', text: "遠" }, { time: 18.00, type: 'don', text: "流" }, { time: 18.50, type: 'don', text: "長" },
-            { time: 19.10, type: 'don', text: "教" }, { time: 19.55, type: 'don', text: "我" }, { time: 20.00, type: 'don', text: "英" }, { time: 20.45, type: 'don', text: "才" },
+
+            // 1. 青山秀麗 (10.8s - 12.9s)
+            { time: 10.80, type: 'don', text: "青" }, { time: 11.32, type: 'don', text: "山" }, { time: 11.85, type: 'don', text: "秀" }, { time: 12.38, type: 'don', text: "麗" },
+            // 碧波蕩漾 (13.0s - 14.8s)
+            { time: 13.00, type: 'don', text: "碧" }, { time: 13.45, type: 'don', text: "波" }, { time: 13.90, type: 'don', text: "蕩" }, { time: 14.35, type: 'don', text: "漾" },
+            // 雙溪環抱 (14.9s - 16.8s)
+            { time: 14.90, type: 'don', text: "雙" }, { time: 15.38, type: 'don', text: "溪" }, { time: 15.85, type: 'don', text: "環" }, { time: 16.32, type: 'don', text: "抱" },
+            // 源遠流長 (17.0s - 18.9s)
+            { time: 17.00, type: 'don', text: "源" }, { time: 17.48, type: 'don', text: "遠" }, { time: 17.95, type: 'don', text: "流" }, { time: 18.42, type: 'don', text: "長" },
+
+            // 2. 教我英才 (19.1s - 20.8s)
+            { time: 19.10, type: 'don', text: "教" }, { time: 19.52, type: 'don', text: "我" }, { time: 19.95, type: 'don', text: "英" }, { time: 20.38, type: 'don', text: "才" },
+            // 育我棟樑 (20.9s - 22.9s)
             { time: 20.90, type: 'don', text: "育" }, { time: 21.40, type: 'don', text: "我" }, { time: 21.90, type: 'don', text: "棟" }, { time: 22.40, type: 'don', text: "樑" },
-            { time: 23.10, type: 'don', text: "巍" }, { time: 23.55, type: 'don', text: "巍" }, { time: 24.00, type: 'don', text: "雙" }, { time: 24.50, type: 'don', text: "中" },
-            { time: 24.90, type: 'don', text: "燦" }, { time: 25.40, type: 'don', text: "爛" }, { time: 25.90, type: 'don', text: "輝" }, { time: 26.40, type: 'don', text: "煌" },
-            { time: 27.00, type: 'don', text: "勤" }, { time: 27.35, type: 'ka', text: "學" }, { time: 27.70, type: 'don', text: "業" },
-            { time: 28.10, type: 'don', text: "尊" }, { time: 28.40, type: 'ka', text: "師" }, { time: 28.70, type: 'don', text: "長" },
-            { time: 29.00, type: 'don', text: "鍛" }, { time: 29.30, type: 'ka', text: "體" }, { time: 29.60, type: 'don', text: "魄" },
-            { time: 30.00, type: 'don', text: "敬" }, { time: 30.30, type: 'ka', text: "同" }, { time: 30.65, type: 'don', text: "窗" },
-            { time: 31.00, type: 'don', text: "立" }, { time: 31.50, type: 'don', text: "志" }, { time: 32.00, type: 'don', text: "光" }, { time: 32.50, type: 'don', text: "大" },
-            { time: 33.00, type: 'don', text: "寰" }, { time: 33.50, type: 'don', text: "宇" }, { time: 34.00, type: 'don', text: "門" }, { time: 34.50, type: 'don', text: "墻" },
-            { time: 35.00, type: 'don', text: "青" }, { time: 35.50, type: 'don', text: "山" }, { time: 36.00, type: 'don', text: "秀" }, { time: 36.50, type: 'don', text: "麗" },
-            { time: 37.00, type: 'don', text: "碧" }, { time: 37.50, type: 'don', text: "波" }, { time: 38.00, type: 'don', text: "蕩" }, { time: 38.50, type: 'don', text: "漾" },
-            { time: 39.00, type: 'don', text: "雙" }, { time: 39.50, type: 'don', text: "溪" }, { time: 40.00, type: 'don', text: "環" }, { time: 40.50, type: 'don', text: "抱" },
-            { time: 41.00, type: 'don', text: "源" }, { time: 41.50, type: 'don', text: "遠" }, { time: 42.00, type: 'don', text: "流" }, { time: 42.50, type: 'don', text: "長" },
+            // 巍巍雙中 (23.1s - 24.8s)
+            { time: 23.10, type: 'don', text: "巍" }, { time: 23.52, type: 'don', text: "巍" }, { time: 23.95, type: 'don', text: "雙" }, { time: 24.38, type: 'don', text: "中" },
+            // 燦爛輝煌 (24.9s - 26.8s)
+            { time: 24.90, type: 'don', text: "燦" }, { time: 25.38, type: 'don', text: "爛" }, { time: 25.85, type: 'don', text: "輝" }, { time: 26.32, type: 'don', text: "煌" },
+
+            // 3. 勤學業, 尊師長, 鍛體魄, 敬同窗 (27.0s - 30.9s)
+            { time: 27.00, type: 'don', text: "勤" }, { time: 27.27, type: 'ka', text: "學" }, { time: 27.53, type: 'don', text: "業" },
+            { time: 28.10, type: 'don', text: "尊" }, { time: 28.33, type: 'ka', text: "師" }, { time: 28.57, type: 'don', text: "長" },
+            { time: 29.00, type: 'don', text: "鍛" }, { time: 29.27, type: 'ka', text: "體" }, { time: 29.53, type: 'don', text: "魄" },
+            { time: 30.00, type: 'don', text: "敬" }, { time: 30.30, type: 'ka', text: "同" }, { time: 30.60, type: 'don', text: "窗" },
+
+            // 立志光大 (31.0s - 32.8s)
+            { time: 31.00, type: 'don', text: "立" }, { time: 31.45, type: 'don', text: "志" }, { time: 31.90, type: 'don', text: "光" }, { time: 32.35, type: 'don', text: "大" },
+            // 寰宇門墻 (33.0s - 34.8s)
+            { time: 33.00, type: 'don', text: "寰" }, { time: 33.45, type: 'don', text: "宇" }, { time: 33.90, type: 'don', text: "門" }, { time: 34.35, type: 'don', text: "墻" },
+
+            // 4. 青山秀麗 (35.0s - 36.8s 重複)
+            { time: 35.00, type: 'don', text: "青" }, { time: 35.45, type: 'don', text: "山" }, { time: 35.90, type: 'don', text: "秀" }, { time: 36.35, type: 'don', text: "麗" },
+            // 碧波蕩漾 (37.0s - 38.8s)
+            { time: 37.00, type: 'don', text: "碧" }, { time: 37.45, type: 'don', text: "波" }, { time: 37.90, type: 'don', text: "蕩" }, { time: 38.35, type: 'don', text: "漾" },
+            // 雙溪環抱 (39.0s - 40.8s)
+            { time: 39.00, type: 'don', text: "雙" }, { time: 39.45, type: 'don', text: "溪" }, { time: 39.90, type: 'don', text: "環" }, { time: 40.35, type: 'don', text: "抱" },
+            // 源遠流長 (41.0s - 42.5s)
+            { time: 41.00, type: 'don', text: "源" }, { time: 41.38, type: 'don', text: "遠" }, { time: 41.75, type: 'don', text: "流" }, { time: 42.12, type: 'don', text: "長" },
+
+            // 5. 教我英才 (42.8s - 44.8s 重複)
             { time: 42.80, type: 'don', text: "教" }, { time: 43.30, type: 'don', text: "我" }, { time: 43.80, type: 'don', text: "英" }, { time: 44.30, type: 'don', text: "才" },
-            { time: 45.00, type: 'don', text: "育" }, { time: 45.50, type: 'don', text: "我" }, { time: 46.00, type: 'don', text: "棟" }, { time: 46.50, type: 'don', text: "樑" },
-            { time: 47.00, type: 'don', text: "巍" }, { time: 47.50, type: 'don', text: "巍" }, { time: 48.00, type: 'don', text: "雙" }, { time: 48.50, type: 'don', text: "中" },
-            { time: 49.00, type: 'don', text: "燦" }, { time: 49.50, type: 'don', text: "爛" }, { time: 50.00, type: 'don', text: "輝" }, { time: 51.50, type: 'don', text: "煌" }
+            // 育我棟樑 (45.0s - 46.9s)
+            { time: 45.00, type: 'don', text: "育" }, { time: 45.48, type: 'don', text: "我" }, { time: 45.95, type: 'don', text: "棟" }, { time: 46.42, type: 'don', text: "樑" },
+            // 巍巍雙中 (47.0s - 48.8s)
+            { time: 47.00, type: 'don', text: "巍" }, { time: 47.45, type: 'don', text: "巍" }, { time: 47.90, type: 'don', text: "雙" }, { time: 48.35, type: 'don', text: "中" },
+            // 燦爛輝煌 (49.0s - 51.2s)
+            { time: 49.00, type: 'don', text: "燦" }, { time: 49.55, type: 'don', text: "爛" }, { time: 50.10, type: 'don', text: "輝" }, { time: 50.65, type: 'don', text: "煌" }
         ];
 
         function initTaikoCanvas() {
@@ -910,7 +938,7 @@
             updateTaikoStatsUI(); updateSoulGaugeUI();
 
             audioPlayer.src = musicTrackSelect.value;
-            scrollSpeedMultiplier = parseFloat(scrollSpeedSelect.value) || 1.2;
+            scrollSpeedMultiplier = parseFloat(scrollSpeedSelect.value) || 1.0;
             audioPlayer.currentTime = 0;
             audioPlayer.play();
             isTaikoRunning = true;
@@ -969,7 +997,9 @@
             const currentTime = audioPlayer.currentTime + taikoOffset;
             const canvasHeight = taikoCanvas.height; const canvasWidth = taikoCanvas.width;
             const centerY = canvasHeight / 2;
-            const noteSpeed = 280 * scrollSpeedMultiplier;
+
+            // 調整舒適滾動流速基準值 (從 280 修正為平緩流暢的 220)
+            const noteSpeed = 220 * scrollSpeedMultiplier;
             const hitX = getHitX();
             const themeColors = getThemeColors();
 
@@ -1003,7 +1033,8 @@
                 const timeDiff = note.time - currentTime;
                 const noteX = hitX + (timeDiff * noteSpeed);
 
-                if (timeDiff < -0.20 && !note.missed) {
+                // 適度延長 Miss 區間，提高遊玩容錯性與順暢感
+                if (timeDiff < -0.28 && !note.missed) {
                     note.missed = true; taikoMiss++; taikoCombo = 0;
                     soulValue = Math.max(0, soulValue - 5);
                     showTaikoJudgment('不可', 'miss'); playTaikoSound('miss');
@@ -1095,13 +1126,14 @@
             const hitX = getHitX();
             const themeColors = getThemeColors();
 
-            const targetNote = taikoNotes.find(n => !n.hit && !n.missed && n.type === hitType && Math.abs(n.time - currentTime) <= 0.24);
+            // 更加流暢包容的判定區間 (0.28s)
+            const targetNote = taikoNotes.find(n => !n.hit && !n.missed && n.type === hitType && Math.abs(n.time - currentTime) <= 0.28);
 
             if (targetNote) {
                 const diff = Math.abs(targetNote.time - currentTime);
                 targetNote.hit = true;
 
-                if (diff <= 0.09) {
+                if (diff <= 0.13) {
                     taikoPerfect++; taikoScore += 1000 + taikoCombo * 25; taikoCombo++;
                     soulValue = Math.min(100, soulValue + 2.5);
                     showTaikoJudgment('良 PERFECT', 'perfect');
