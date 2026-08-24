@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雙溪高中校歌 - 太鼓達人 Taiko no Tatsujin</title>
+    <!-- Importing Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Yuji+Mai&display=swap');
+        
+        :root {
+            --bg-body: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 60%, #020617 100%);
+            --c-card-bg: rgba(15, 23, 42, 0.88);
+            --card-border: rgba(245, 158, 11, 0.4);
+            --title-gradient: linear-gradient(45deg, #ef4444, #f59e0b, #38bdf8);
+            --taiko-red: #ef4444;
+            --taiko-red-dark: #991b1b;
+            --taiko-blue: #0284c7;
+            --taiko-blue-dark: #075985;
+            --taiko-gold: #f59e0b;
+            --c-text: #f8fafc;
+        }
+
+        /* 2. 浪漫夜櫻風 (Sakura Night) */
+        body[data-theme="sakura"] {
+            --bg-body: radial-gradient(circle at center, #4c1d95 0%, #1e1b4b 50%, #0f0728 100%);
+            --c-card-bg: rgba(30, 15, 55, 0.9);
+            --card-border: rgba(244, 114, 182, 0.5);
+            --title-gradient: linear-gradient(45deg, #f472b6, #fb7185, #c084fc);
+            --taiko-red: #f43f5e;
+            --taiko-red-dark: #881337;
+            --taiko-blue: #a855f7;
+            --taiko-blue-dark: #581c87;
+            --taiko-gold: #fb7185;
+        }
+
+        /* 3. 賽博霓虹風 (Cyberpunk Neon) */
+        body[data-theme="cyberpunk"] {
+            --bg-body: radial-gradient(circle at center, #092e34 0%, #030712 70%, #000000 100%);
+            --c-card-bg: rgba(6, 18, 30, 0.92);
+            --card-border: rgba(6, 182, 212, 0.6);
+            --title-gradient: linear-gradient(45deg, #22d3ee, #e879f9, #f43f5e);
+            --taiko-red: #ff0055;
+            --taiko-red-dark: #990033;
+            --taiko-blue: #00f0ff;
+            --taiko-blue-dark: #0088cc;
+            --taiko-gold: #00ffcc;
+        }
+
+        /* 4. 翡翠竹林風 (Emerald Forest) */
+        body[data-theme="emerald"] {
+            --bg-body: radial-gradient(circle at center, #064e3b 0%, #022c22 60%, #01140e 100%);
+            --c-card-bg: rgba(4, 30, 24, 0.9);
+            --card-border: rgba(52, 211, 153, 0.5);
+            --title-gradient: linear-gradient(45deg, #34d399, #a3e635, #38bdf8);
+            --taiko-red: #10b981;
+            --taiko-red-dark: #065f46;
+            --taiko-blue: #0ea5e9;
+            --taiko-blue-dark: #0369a1;
+            --taiko-gold: #a3e635;
+        }
+
+        /* 5. 炫金奢華風 (Luxury Gold) */
+        body[data-theme="gold"] {
+            --bg-body: radial-gradient(circle at center, #27272a 0%, #09090b 70%, #000000 100%);
+            --c-card-bg: rgba(24, 24, 27, 0.92);
+            --card-border: rgba(234, 179, 8, 0.6);
+            --title-gradient: linear-gradient(45deg, #fef08a, #eab308, #ca8a04);
+            --taiko-red: #eab308;
+            --taiko-red-dark: #854d0e;
+            --taiko-blue: #38bdf8;
+            --taiko-blue-dark: #0369a1;
+            --taiko-gold: #fef08a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg-body);
+            background-size: 200% 200%;
+            animation: bgPulse 12s ease infinite alternate;
+            color: var(--c-text);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 15px 12px 65px 12px;
+            font-family: 'Noto Sans TC', sans-serif;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
+
+        @keyframes bgPulse {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* 櫻花/慶典背景飄落圖示 */
+        .background-icons {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .background-icons i {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.12);
+            animation: floatUp 16s linear infinite;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(0) rotate(0deg); opacity: 0.7; bottom: -10%; }
+            to { transform: translateY(-1200px) rotate(360deg); opacity: 0; bottom: 110%; }
+        }
+
+        /* 主遊戲卡片容器 (精簡滿版) */
+        .container {
+            width: 100%;
+            max-width: 980px;
+            background: var(--c-card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(239, 68, 68, 0.2);
+            padding: 18px 22px;
+            position: relative;
+            z-index: 1;
+            margin-top: 5px;
+            border: 2px solid var(--card-border);
+            transition: all 0.5s ease;
+        }
+
+        /* 和風頂部 Header (緊湊型) */
+        header {
+            text-align: center;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        header h1 {
+            font-size: 1.9em;
+            font-weight: 900;
+            background: var(--title-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 15px rgba(239, 68, 68, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+        header p.subtitle {
+            color: #cbd5e1;
+            font-size: 0.88em;
+            margin-top: 3px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* 雙欄緊湊儀表板 Dashboard (併排開始按鈕、魂量條與分數板) */
+        .taiko-dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .dash-card {
+            background: #090d16;
+            border-radius: 18px;
+            padding: 10px 16px;
+            border: 2px solid var(--taiko-red-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+            transition: border-color 0.5s ease;
+        }
+        .dash-action-card {
+            border-color: rgba(245, 158, 11, 0.4);
+            gap: 8px;
+        }
+
+        /* 動作與按鈕 bar */
+        .main-start-bar {
+            text-align: center;
+            width: 100%;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .btn-hero {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            justify-content: center;
+            animation: heroPulse 2s infinite ease-in-out;
+        }
+        @keyframes heroPulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 8px 22px rgba(239, 68, 68, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--taiko-red), var(--taiko-red-dark));
+            color: white;
+            border: 2px solid #fca5a5;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 900;
+            font-size: 1.05em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .btn-primary:hover {
+            transform: scale(1.03) translateY(-1px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: 2px solid #fef08a;
+            border-radius: 30px;
+            font-weight: 900;
+            font-size: 1.05em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            transform: scale(1.03) translateY(-1px);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #475569, #334155);
+            color: white;
+            border: 1px solid #64748b;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        /* 魂量條 (Soul Gauge 緊湊型) */
+        .soul-gauge-container {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 12px;
+            padding: 6px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .soul-label {
+            font-size: 0.78em;
+            font-weight: 900;
+            color: var(--taiko-gold);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            min-width: 65px;
+        }
+        .soul-bar-bg {
+            flex-grow: 1;
+            height: 12px;
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #334155;
+        }
+        .soul-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--taiko-gold), var(--taiko-red), #ec4899);
+            border-radius: 8px;
+            transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+        }
+        .soul-badge {
+            font-size: 0.72em;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #334155;
+            color: #94a3b8;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .soul-badge.active {
+            background: linear-gradient(135deg, var(--taiko-gold), var(--taiko-red));
+            color: #fff;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.8);
+            animation: pulseGlow 1s infinite alternate;
+        }
+
+        /* 併排計分板 */
+        .dash-score-card .score-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 12px;
+            width: 100%;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .stat-label {
+            font-size: 0.7em;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: 900;
+            color: var(--taiko-red);
+            font-family: 'monospace', sans-serif;
+            text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+            transition: color 0.5s ease;
+        }
+        .stat-value.combo { color: var(--taiko-gold); }
+        .stat-value.highscore { color: #38bdf8; }
+
+        /* 精簡一條流工具列 (Compact Toolbar) */
+        .taiko-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.8);
+            padding: 8px 14px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .tool-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85em;
+            color: #cbd5e1;
+        }
+        .tool-group label {
+            font-weight: 700;
+            color: var(--taiko-gold);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tool-select, .offset-btn, .btn-action-tool {
+            background: #0f172a;
+            color: #fff;
+            border: 1px solid #475569;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tool-select:hover, .offset-btn:hover, .btn-action-tool:hover {
+            border-color: var(--taiko-gold);
+            background: #1e293b;
+        }
+        .btn-action-danger {
+            background: rgba(185, 28, 28, 0.3);
+            border-color: #ef4444;
+            color: #fca5a5;
+        }
+        .btn-action-danger:hover {
+            background: #b91c1c;
+            color: #fff;
+        }
+        .offset-btn { padding: 2px 7px; border-radius: 6px; }
+
+        /* 太鼓 Canvas 畫布區塊 */
+        .taiko-canvas-wrapper {
+            position: relative;
+            width: 100%;
+            height: 195px;
+            margin: 0 auto 12px auto;
+            background: #090d16;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 4px solid var(--taiko-red-dark);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0,0,0,0.9);
+            transition: border-color 0.5s ease;
+        }
+        #taiko-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* 擊打判定覆蓋文字 */
+        .taiko-judgment-overlay {
+            position: absolute;
+            top: 50%;
+            left: 125px;
+            transform: translate(-50%, -50%) scale(0.8);
+            font-size: 2.2em;
+            font-weight: 900;
+            pointer-events: none;
+            opacity: 0;
+            transition: transform 0.12s ease-out, opacity 0.25s ease-out;
+            z-index: 10;
+            font-family: 'Yuji Mai', 'Noto Sans TC', serif;
+            letter-spacing: 2px;
+        }
+        .taiko-judgment-overlay.perfect { color: #facc15; text-shadow: 0 0 20px #facc15, 0 0 10px #f59e0b; }
+        .taiko-judgment-overlay.good { color: #38bdf8; text-shadow: 0 0 20px #38bdf8, 0 0 10px #0284c7; }
+        .taiko-judgment-overlay.miss { color: #94a3b8; text-shadow: 0 0 10px #64748b; }
+
+        /* 太鼓打擊大按鈕 */
+        .taiko-controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+        .taiko-pad-btn {
+            border: none;
+            border-radius: 20px;
+            padding: 16px 8px;
+            font-size: 1.35em;
+            font-weight: 900;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+            transition: all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+        .taiko-pad-btn.don {
+            background: linear-gradient(135deg, var(--taiko-red), var(--taiko-red-dark));
+            border: 3px solid #fca5a5;
+        }
+        .taiko-pad-btn.ka {
+            background: linear-gradient(135deg, var(--taiko-blue), var(--taiko-blue-dark));
+            border: 3px solid #7dd3fc;
+        }
+        .taiko-pad-btn span.key-hint {
+            font-size: 0.62em;
+            opacity: 0.9;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+        .taiko-pad-btn:active, .taiko-pad-btn.pressed {
+            transform: scale(0.94) translateY(3px);
+        }
+
+        /* 結算 Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-card {
+            background: radial-gradient(circle at top, #1e293b, #0f172a);
+            color: white;
+            border-radius: 28px;
+            padding: 30px 35px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            border: 3px solid var(--taiko-gold);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .rank-badge {
+            font-size: 4.2em;
+            font-weight: 900;
+            margin: 8px 0;
+            font-family: 'Yuji Mai', serif;
+            background: linear-gradient(45deg, #facc15, #f59e0b, #ef4444);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .result-details {
+            margin: 15px 0 20px 0;
+            background: rgba(30, 41, 59, 0.9);
+            padding: 15px;
+            border-radius: 14px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        /* 吉祥物 (左下角) */
+        #mascot-container {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            z-index: 9999;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transition: transform 0.2s ease-out;
+        }
+        #mascot-container img {
+            width: 110px;
+            display: block;
+            pointer-events: none;
+            filter: drop-shadow(0 6px 15px rgba(0,0,0,0.5));
+            transition: filter 0.3s ease;
+        }
+
+        /* 懸停霓虹發光與抖動特效 */
+        #mascot-container:hover img {
+            animation: rainbowNeon 1.5s infinite linear, mascotShake 0.4s infinite ease-in-out;
+        }
+
+        @keyframes rainbowNeon {
+            0% { filter: drop-shadow(0 0 12px #ef4444) drop-shadow(0 0 22px #ef4444); }
+            20% { filter: drop-shadow(0 0 12px #f59e0b) drop-shadow(0 0 22px #f59e0b); }
+            40% { filter: drop-shadow(0 0 12px #10b981) drop-shadow(0 0 22px #10b981); }
+            60% { filter: drop-shadow(0 0 12px #06b6d4) drop-shadow(0 0 22px #06b6d4); }
+            80% { filter: drop-shadow(0 0 12px #ec4899) drop-shadow(0 0 22px #ec4899); }
+            100% { filter: drop-shadow(0 0 12px #ef4444) drop-shadow(0 0 22px #ef4444); }
+        }
+
+        @keyframes mascotShake {
+            0% { transform: rotate(0deg) scale(1.06); }
+            25% { transform: rotate(-7deg) scale(1.09); }
+            50% { transform: rotate(0deg) scale(1.06); }
+            75% { transform: rotate(7deg) scale(1.09); }
+            100% { transform: rotate(0deg) scale(1.06); }
+        }
+
+        #mascot-container.explode { animation: explode-animation 0.4s ease-in-out; }
+        @keyframes explode-animation { 0% { transform: scale(1.5); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
+        .particle { position: absolute; width: 10px; height: 10px; border-radius: 50%; z-index: 200; pointer-events: none; }
+
+        footer {
+            position: fixed; bottom: 0; left: 0; right: 0; padding: 8px;
+            background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.85); font-size: 0.8em; text-align: center; z-index: 10;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 響應式 RWD */
+        @media (max-width: 768px) {
+            body { padding: 8px; padding-bottom: 55px; }
+            .container { padding: 14px 10px; border-radius: 18px; }
+            header h1 { font-size: 1.4em; }
+            .taiko-dashboard-grid { grid-template-columns: 1fr; gap: 8px; }
+            .taiko-toolbar { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
+            .tool-group { justify-content: space-between; width: 100%; }
+            .taiko-controls-grid { grid-template-columns: 1fr; gap: 10px; }
+            .taiko-pad-btn { padding: 14px 8px; font-size: 1.2em; }
+            #mascot-container img { width: 85px; }
+            .taiko-canvas-wrapper { height: 175px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-icons" id="background-icons"></div>
+
+    <!-- 主要卡片容器 -->
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-drum"></i> 雙溪高中校歌太鼓達人</h1>
+            <p class="subtitle">SXHS School Song Taiko no Tatsujin</p>
+        </header>
+
+        <!-- 雙欄並排緊湊 Dashboard (左側:開始/暫停按鈕與魂量條 / 右側:計分板) -->
+        <div class="taiko-dashboard-grid">
+            <div class="dash-card dash-action-card">
+                <div class="main-start-bar">
+                    <button id="taiko-start-btn" class="btn-primary btn-hero"><i class="fas fa-play"></i> 開始太鼓遊戲</button>
+                    <button id="taiko-pause-btn" class="btn-warning btn-hero" style="display: none;"><i class="fas fa-pause"></i> 暫停遊戲</button>
+                    <button id="taiko-restart-btn" class="btn-secondary btn-hero" style="display: none;"><i class="fas fa-rotate-right"></i> 重新開始</button>
+                </div>
+                <div class="soul-gauge-container">
+                    <div class="soul-label"><i class="fas fa-fire"></i> 魂量條</div>
+                    <div class="soul-bar-bg">
+                        <div class="soul-bar-fill" id="soul-bar-fill"></div>
+                    </div>
+                    <div class="soul-badge" id="soul-badge"><i class="fas fa-fire-flame-curved"></i> 魂 SOUL</div>
+                </div>
+            </div>
+
+            <div class="dash-card dash-score-card">
+                <div class="score-box">
+                    <div class="stat-item">
+                        <span class="stat-label">得分 SCORE</span>
+                        <span class="stat-value" id="taiko-score">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">連擊 COMBO</span>
+                        <span class="stat-value combo" id="taiko-combo">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">準確度 ACC</span>
+                        <span class="stat-value" style="color:#38bdf8;" id="taiko-acc">100%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">最高分 BEST</span>
+                        <span class="stat-value highscore" id="taiko-highscore">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 精簡單列工具選單 (Compact Toolbar) -->
+        <div class="taiko-toolbar">
+            <div class="tool-group">
+                <label for="theme-select"><i class="fas fa-palette"></i> 風格：</label>
+                <select id="theme-select" class="tool-select">
+                    <option value="festival" selected>經典慶典</option>
+                    <option value="sakura">浪漫夜櫻</option>
+                    <option value="cyberpunk">賽博霓虹</option>
+                    <option value="emerald">翡翠竹林</option>
+                    <option value="gold">炫金奢華</option>
+                </select>
+            </div>
+            <div class="tool-group">
+                <label for="music-track-select"><i class="fas fa-music"></i> 音軌：</label>
+                <select id="music-track-select" class="tool-select">
+                    <option value="music/雙中校歌導唱.mp3">人聲導唱版</option>
+                    <option value="music/雙中校歌純伴奏.mp3">純音樂伴奏版</option>
+                </select>
+            </div>
+            <div class="tool-group">
+                <label for="scroll-speed-select"><i class="fas fa-gauge-high"></i> 流速：</label>
+                <select id="scroll-speed-select" class="tool-select">
+                    <option value="1.0">1.0x</option>
+                    <option value="1.2" selected>1.2x</option>
+                    <option value="1.5">1.5x</option>
+                </select>
+            </div>
+            <div class="tool-group">
+                <label><i class="fas fa-sliders"></i> 對拍：</label>
+                <button class="offset-btn" id="offset-minus">-</button>
+                <span id="offset-val" style="color:var(--taiko-red); font-weight:bold; min-width: 38px; text-align: center;">-0.15s</span>
+                <button class="offset-btn" id="offset-plus">+</button>
+            </div>
+            <div class="tool-group">
+                <button id="btn-clear-score" class="btn-action-tool btn-action-danger" title="一鍵清除最高分記錄">
+                    <i class="fas fa-trash-alt"></i> 清除
+                </button>
+            </div>
+        </div>
+
+        <!-- 太鼓 Canvas 畫布 -->
+        <div class="taiko-canvas-wrapper">
+            <canvas id="taiko-canvas"></canvas>
+            <div id="taiko-judgment-overlay" class="taiko-judgment-overlay">良</div>
+        </div>
+
+        <!-- 虛擬打擊按鈕 -->
+        <div class="taiko-controls-grid">
+            <button class="taiko-pad-btn don" id="btn-don-left">
+                <span><i class="fas fa-circle" style="color:#ffffff; margin-right:6px;"></i> 咚 (DON)</span>
+                <span class="key-hint">按鍵 [F] 或 [J]</span>
+            </button>
+            <button class="taiko-pad-btn ka" id="btn-ka-left">
+                <span><i class="fas fa-circle" style="color:#7dd3fc; margin-right:6px;"></i> 咔 (KA)</span>
+                <span class="key-hint">按鍵 [D] 或 [K]</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 通用遊戲結算 Modal -->
+    <div class="modal-backdrop" id="game-over-modal">
+        <div class="modal-card">
+            <h2><i class="fas fa-trophy" style="color:var(--taiko-gold);"></i> 演奏完成 RESULT</h2>
+            <div class="rank-badge" id="modal-rank">S</div>
+            <div class="result-details" id="modal-result-details"></div>
+            <button id="modal-close-btn" class="btn-primary" style="width: 100%; justify-content: center;"><i class="fas fa-rotate-right"></i> 再次挑戰</button>
+        </div>
+    </div>
+
+    <!-- 吉祥物 -->
+    <div id="mascot-container" title="拖曳我移動到任何地方！點擊我有小驚喜！">
+        <img src="image/LiyuChillGuy.svg" alt="Mascot">
+    </div>
+
+    <footer><p>Copyright © Liyuchiutiger Gongminshen</p></footer>
+
+    <!-- 全域音訊播放器 -->
+    <audio id="audio-player" preload="auto"></audio>
+
+    <script>
+        // ====================================================
+        // 全域變數與初始化
+        // ====================================================
+        const audioPlayer = document.getElementById('audio-player');
+        const mascotContainer = document.getElementById('mascot-container');
+        const backgroundIconsContainer = document.getElementById('background-icons');
+
+        const themeSelect = document.getElementById('theme-select');
+        const musicTrackSelect = document.getElementById('music-track-select');
+        const scrollSpeedSelect = document.getElementById('scroll-speed-select');
+
+        let sfxCtx = null;
+        let drumVisualFeedback = { don: 0, ka: 0 };
+        let taikoParticles = [];
+        let taikoShockwaves = [];
+
+        // ====================================================
+        // 多配色主題設定 (Theme Selection)
+        // ====================================================
+        function applyTheme(themeName) {
+            document.body.setAttribute('data-theme', themeName);
+            localStorage.setItem('sxhs_taiko_theme', themeName);
+            if (themeSelect.value !== themeName) themeSelect.value = themeName;
+            drawTaikoField();
+        }
+
+        themeSelect.addEventListener('change', (e) => applyTheme(e.target.value));
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('sxhs_taiko_theme') || 'festival';
+            applyTheme(savedTheme);
+        }
+
+        function getThemeColors() {
+            const theme = document.body.getAttribute('data-theme') || 'festival';
+            switch(theme) {
+                case 'sakura':
+                    return { don: '#f43f5e', donBorder: '#fda4af', ka: '#a855f7', kaBorder: '#d8b4fe', trackBg: '#2e1065', trackBorder: '#9d174d' };
+                case 'cyberpunk':
+                    return { don: '#ff0055', donBorder: '#ff6699', ka: '#00f0ff', kaBorder: '#80f8ff', trackBg: '#071927', trackBorder: '#00f0ff' };
+                case 'emerald':
+                    return { don: '#10b981', donBorder: '#6ee7b7', ka: '#0ea5e9', kaBorder: '#7dd3fc', trackBg: '#064e3b', trackBorder: '#059669' };
+                case 'gold':
+                    return { don: '#eab308', donBorder: '#fef08a', ka: '#38bdf8', kaBorder: '#bae6fd', trackBg: '#27272a', trackBorder: '#eab308' };
+                default: // festival
+                    return { don: '#ef4444', donBorder: '#fca5a5', ka: '#0284c7', kaBorder: '#7dd3fc', trackBg: '#1e293b', trackBorder: '#b91c1c' };
+            }
+        }
+
+        function getSfxContext() {
+            if (!sfxCtx) {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                sfxCtx = new AudioCtx();
+            }
+            if (sfxCtx.state === 'suspended') sfxCtx.resume();
+            return sfxCtx;
+        }
+
+        // Web Audio 高音質合成打擊音效
+        function playTaikoSound(type) {
+            try {
+                const ctx = getSfxContext();
+                const now = ctx.currentTime;
+
+                if (type === 'don') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(38, now + 0.15);
+                    gain.gain.setValueAtTime(0.7, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                } else if (type === 'ka') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(1100, now);
+                    osc.frequency.exponentialRampToValueAtTime(350, now + 0.07);
+                    gain.gain.setValueAtTime(0.55, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+                    osc.start(now); osc.stop(now + 0.07);
+                } else if (type === 'perfect') {
+                    [523.25, 659.25, 783.99].forEach((freq, idx) => {
+                        const o = ctx.createOscillator(); const g = ctx.createGain();
+                        o.connect(g); g.connect(ctx.destination);
+                        o.type = 'sine'; o.frequency.value = freq;
+                        g.gain.setValueAtTime(0.12, now + idx * 0.05);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.2);
+                        o.start(now + idx * 0.05); o.stop(now + idx * 0.05 + 0.2);
+                    });
+                } else if (type === 'miss') {
+                    const o = ctx.createOscillator(); const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = 'sawtooth';
+                    o.frequency.setValueAtTime(140, now);
+                    o.frequency.linearRampToValueAtTime(60, now + 0.2);
+                    g.gain.setValueAtTime(0.25, now);
+                    g.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    o.start(now); o.stop(now + 0.2);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // ====================================================
+        // 太鼓達人核心遊戲邏輯
+        // ====================================================
+        const taikoCanvas = document.getElementById('taiko-canvas');
+        let tCtx = null;
+        let taikoNotes = [];
+        let taikoScore = 0, taikoCombo = 0, taikoMaxCombo = 0;
+        let taikoPerfect = 0, taikoGood = 0, taikoMiss = 0;
+        let soulValue = 0;
+        let isTaikoRunning = false;
+        let isTaikoPaused = false;
+        let taikoAnimFrame = null;
+        let taikoOffset = -0.15;
+        let scrollSpeedMultiplier = 1.2;
+
+        function getHitX() {
+            if (!taikoCanvas) return 125;
+            return Math.min(125, Math.max(80, taikoCanvas.width * 0.2));
+        }
+
+        const mp3RealBeatmap = [
+            { time: 2.00, type: 'don', text: "咚" }, { time: 3.20, type: 'ka', text: "咔" },
+            { time: 4.40, type: 'don', text: "咚" }, { time: 5.60, type: 'ka', text: "咔" },
+            { time: 6.80, type: 'don', text: "咚" }, { time: 8.00, type: 'ka', text: "咔" },
+            { time: 9.20, type: 'don', text: "咚" }, { time: 10.00, type: 'ka', text: "咔" },
+            { time: 10.80, type: 'don', text: "青" }, { time: 11.35, type: 'don', text: "山" }, { time: 11.90, type: 'don', text: "秀" }, { time: 12.45, type: 'don', text: "麗" },
+            { time: 13.00, type: 'don', text: "碧" }, { time: 13.50, type: 'don', text: "波" }, { time: 14.00, type: 'don', text: "蕩" }, { time: 14.50, type: 'don', text: "漾" },
+            { time: 14.90, type: 'don', text: "雙" }, { time: 15.40, type: 'don', text: "溪" }, { time: 15.90, type: 'don', text: "環" }, { time: 16.40, type: 'don', text: "抱" },
+            { time: 17.00, type: 'don', text: "源" }, { time: 17.50, type: 'don', text: "遠" }, { time: 18.00, type: 'don', text: "流" }, { time: 18.50, type: 'don', text: "長" },
+            { time: 19.10, type: 'don', text: "教" }, { time: 19.55, type: 'don', text: "我" }, { time: 20.00, type: 'don', text: "英" }, { time: 20.45, type: 'don', text: "才" },
+            { time: 20.90, type: 'don', text: "育" }, { time: 21.40, type: 'don', text: "我" }, { time: 21.90, type: 'don', text: "棟" }, { time: 22.40, type: 'don', text: "樑" },
+            { time: 23.10, type: 'don', text: "巍" }, { time: 23.55, type: 'don', text: "巍" }, { time: 24.00, type: 'don', text: "雙" }, { time: 24.50, type: 'don', text: "中" },
+            { time: 24.90, type: 'don', text: "燦" }, { time: 25.40, type: 'don', text: "爛" }, { time: 25.90, type: 'don', text: "輝" }, { time: 26.40, type: 'don', text: "煌" },
+            { time: 27.00, type: 'don', text: "勤" }, { time: 27.35, type: 'ka', text: "學" }, { time: 27.70, type: 'don', text: "業" },
+            { time: 28.10, type: 'don', text: "尊" }, { time: 28.40, type: 'ka', text: "師" }, { time: 28.70, type: 'don', text: "長" },
+            { time: 29.00, type: 'don', text: "鍛" }, { time: 29.30, type: 'ka', text: "體" }, { time: 29.60, type: 'don', text: "魄" },
+            { time: 30.00, type: 'don', text: "敬" }, { time: 30.30, type: 'ka', text: "同" }, { time: 30.65, type: 'don', text: "窗" },
+            { time: 31.00, type: 'don', text: "立" }, { time: 31.50, type: 'don', text: "志" }, { time: 32.00, type: 'don', text: "光" }, { time: 32.50, type: 'don', text: "大" },
+            { time: 33.00, type: 'don', text: "寰" }, { time: 33.50, type: 'don', text: "宇" }, { time: 34.00, type: 'don', text: "門" }, { time: 34.50, type: 'don', text: "墻" },
+            { time: 35.00, type: 'don', text: "青" }, { time: 35.50, type: 'don', text: "山" }, { time: 36.00, type: 'don', text: "秀" }, { time: 36.50, type: 'don', text: "麗" },
+            { time: 37.00, type: 'don', text: "碧" }, { time: 37.50, type: 'don', text: "波" }, { time: 38.00, type: 'don', text: "蕩" }, { time: 38.50, type: 'don', text: "漾" },
+            { time: 39.00, type: 'don', text: "雙" }, { time: 39.50, type: 'don', text: "溪" }, { time: 40.00, type: 'don', text: "環" }, { time: 40.50, type: 'don', text: "抱" },
+            { time: 41.00, type: 'don', text: "源" }, { time: 41.50, type: 'don', text: "遠" }, { time: 42.00, type: 'don', text: "流" }, { time: 42.50, type: 'don', text: "長" },
+            { time: 42.80, type: 'don', text: "教" }, { time: 43.30, type: 'don', text: "我" }, { time: 43.80, type: 'don', text: "英" }, { time: 44.30, type: 'don', text: "才" },
+            { time: 45.00, type: 'don', text: "育" }, { time: 45.50, type: 'don', text: "我" }, { time: 46.00, type: 'don', text: "棟" }, { time: 46.50, type: 'don', text: "樑" },
+            { time: 47.00, type: 'don', text: "巍" }, { time: 47.50, type: 'don', text: "巍" }, { time: 48.00, type: 'don', text: "雙" }, { time: 48.50, type: 'don', text: "中" },
+            { time: 49.00, type: 'don', text: "燦" }, { time: 49.50, type: 'don', text: "爛" }, { time: 50.00, type: 'don', text: "輝" }, { time: 51.50, type: 'don', text: "煌" }
+        ];
+
+        function initTaikoCanvas() {
+            if (!taikoCanvas) return;
+            tCtx = taikoCanvas.getContext('2d');
+            const rect = taikoCanvas.parentElement.getBoundingClientRect();
+            taikoCanvas.width = rect.width; taikoCanvas.height = rect.height;
+            drawTaikoField();
+            const savedHighScore = localStorage.getItem('sxhs_taiko_highscore') || 0;
+            document.getElementById('taiko-highscore').textContent = savedHighScore;
+        }
+
+        function generateTaikoNotes() {
+            taikoNotes = mp3RealBeatmap.map((item, idx) => ({ id: idx, time: item.time, type: item.type, text: item.text, hit: false, missed: false }));
+        }
+
+        function stopAllGames() {
+            audioPlayer.pause();
+            if (taikoAnimFrame) cancelAnimationFrame(taikoAnimFrame);
+            isTaikoRunning = false;
+            isTaikoPaused = false;
+            document.getElementById('taiko-start-btn').style.display = 'inline-flex';
+            document.getElementById('taiko-pause-btn').style.display = 'none';
+            document.getElementById('taiko-restart-btn').style.display = 'none';
+        }
+
+        function startTaikoGame() {
+            getSfxContext(); stopAllGames(); generateTaikoNotes();
+            taikoScore = 0; taikoCombo = 0; taikoMaxCombo = 0;
+            taikoPerfect = 0; taikoGood = 0; taikoMiss = 0; soulValue = 0;
+            taikoParticles = []; taikoShockwaves = [];
+            updateTaikoStatsUI(); updateSoulGaugeUI();
+
+            audioPlayer.src = musicTrackSelect.value;
+            scrollSpeedMultiplier = parseFloat(scrollSpeedSelect.value) || 1.2;
+            audioPlayer.currentTime = 0;
+            audioPlayer.play();
+            isTaikoRunning = true;
+            isTaikoPaused = false;
+
+            document.getElementById('taiko-start-btn').style.display = 'none';
+            document.getElementById('taiko-pause-btn').style.display = 'inline-flex';
+            document.getElementById('taiko-pause-btn').innerHTML = '<i class="fas fa-pause"></i> 暫停遊戲';
+            document.getElementById('taiko-pause-btn').className = 'btn-warning btn-hero';
+            document.getElementById('taiko-restart-btn').style.display = 'inline-flex';
+
+            if (taikoAnimFrame) cancelAnimationFrame(taikoAnimFrame);
+            taikoGameLoop();
+        }
+
+        function togglePauseTaikoGame() {
+            if (!isTaikoRunning) return;
+            const pauseBtn = document.getElementById('taiko-pause-btn');
+
+            if (!isTaikoPaused) {
+                isTaikoPaused = true;
+                audioPlayer.pause();
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i> 繼續遊戲';
+                pauseBtn.className = 'btn-primary btn-hero';
+                drawPauseOverlay();
+            } else {
+                isTaikoPaused = false;
+                audioPlayer.play();
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> 暫停遊戲';
+                pauseBtn.className = 'btn-warning btn-hero';
+                if (taikoAnimFrame) cancelAnimationFrame(taikoAnimFrame);
+                taikoGameLoop();
+            }
+        }
+
+        function drawPauseOverlay() {
+            if (!tCtx) return;
+            const W = taikoCanvas.width;
+            const H = taikoCanvas.height;
+            tCtx.save();
+            tCtx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+            tCtx.fillRect(0, 0, W, H);
+
+            tCtx.fillStyle = '#f59e0b';
+            tCtx.font = '900 24px "Yuji Mai", "Noto Sans TC", serif';
+            tCtx.textAlign = 'center';
+            tCtx.textBaseline = 'middle';
+            tCtx.shadowBlur = 12;
+            tCtx.shadowColor = '#f59e0b';
+            tCtx.fillText("⏸️ 遊戲暫停中 (按 P 鍵或按鈕恢復)", W / 2, H / 2);
+            tCtx.restore();
+        }
+
+        function taikoGameLoop() {
+            if (!isTaikoRunning || isTaikoPaused) return;
+            const currentTime = audioPlayer.currentTime + taikoOffset;
+            const canvasHeight = taikoCanvas.height; const canvasWidth = taikoCanvas.width;
+            const centerY = canvasHeight / 2;
+            const noteSpeed = 280 * scrollSpeedMultiplier;
+            const hitX = getHitX();
+            const themeColors = getThemeColors();
+
+            tCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            // 1. 繪製軌道背景
+            tCtx.fillStyle = themeColors.trackBg;
+            tCtx.fillRect(0, centerY - 55, canvasWidth, 110);
+            tCtx.fillStyle = themeColors.trackBorder;
+            tCtx.fillRect(0, centerY - 55, canvasWidth, 6);
+            tCtx.fillRect(0, centerY + 49, canvasWidth, 6);
+
+            // 2. 繪製太鼓
+            drawLeftTaikoDrum(Math.min(55, hitX * 0.45), centerY);
+
+            // 3. 擊打目標判定圈
+            tCtx.save();
+            tCtx.fillStyle = '#0f172a';
+            tCtx.beginPath(); tCtx.arc(hitX, centerY, 38, 0, Math.PI * 2); tCtx.fill();
+            tCtx.strokeStyle = '#f59e0b'; tCtx.lineWidth = 4; tCtx.stroke();
+            tCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)'; tCtx.lineWidth = 2;
+            tCtx.beginPath(); tCtx.arc(hitX, centerY, 28, 0, Math.PI * 2); tCtx.stroke();
+            tCtx.restore();
+
+            // 4. 衝擊波
+            updateAndDrawShockwaves(centerY);
+
+            // 5. 音符
+            taikoNotes.forEach(note => {
+                if (note.hit) return;
+                const timeDiff = note.time - currentTime;
+                const noteX = hitX + (timeDiff * noteSpeed);
+
+                if (timeDiff < -0.20 && !note.missed) {
+                    note.missed = true; taikoMiss++; taikoCombo = 0;
+                    soulValue = Math.max(0, soulValue - 5);
+                    showTaikoJudgment('不可', 'miss'); playTaikoSound('miss');
+                    updateTaikoStatsUI(); updateSoulGaugeUI();
+                }
+
+                if (noteX > -40 && noteX < canvasWidth + 40 && !note.missed) {
+                    const isDon = note.type === 'don';
+                    const mainColor = isDon ? themeColors.don : themeColors.ka;
+                    const borderColor = isDon ? themeColors.donBorder : themeColors.kaBorder;
+
+                    tCtx.save();
+                    tCtx.shadowBlur = 12; tCtx.shadowColor = mainColor;
+
+                    tCtx.fillStyle = mainColor;
+                    tCtx.beginPath(); tCtx.arc(noteX, centerY, 34, 0, Math.PI * 2); tCtx.fill();
+                    tCtx.strokeStyle = borderColor; tCtx.lineWidth = 3.5; tCtx.stroke();
+
+                    tCtx.shadowBlur = 0;
+                    tCtx.font = '900 24px "Noto Sans TC", sans-serif';
+                    tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
+                    tCtx.strokeStyle = 'rgba(0, 0, 0, 0.85)';
+                    tCtx.lineWidth = 4;
+                    tCtx.lineJoin = 'round';
+                    tCtx.strokeText(note.text, noteX, centerY + 1);
+
+                    tCtx.fillStyle = '#ffffff';
+                    tCtx.fillText(note.text, noteX, centerY + 1);
+                    tCtx.restore();
+                }
+            });
+
+            // 6. 打擊粒子
+            updateAndDrawParticles();
+
+            if (audioPlayer.ended || (taikoNotes.length > 0 && taikoNotes.every(n => n.hit || n.missed))) {
+                endTaikoGame(); return;
+            }
+            taikoAnimFrame = requestAnimationFrame(taikoGameLoop);
+        }
+
+        function drawLeftTaikoDrum(x, y) {
+            tCtx.save();
+            const donActive = drumVisualFeedback.don > 0;
+            const kaActive = drumVisualFeedback.ka > 0;
+            const themeColors = getThemeColors();
+
+            if (donActive) drumVisualFeedback.don -= 0.15;
+            if (kaActive) drumVisualFeedback.ka -= 0.15;
+
+            tCtx.fillStyle = kaActive ? themeColors.ka : '#78350f';
+            tCtx.beginPath(); tCtx.arc(x, y, 46, 0, Math.PI * 2); tCtx.fill();
+            tCtx.strokeStyle = '#f59e0b'; tCtx.lineWidth = 3; tCtx.stroke();
+
+            tCtx.fillStyle = donActive ? themeColors.donBorder : '#fef3c7';
+            tCtx.beginPath(); tCtx.arc(x, y, 35, 0, Math.PI * 2); tCtx.fill();
+            tCtx.strokeStyle = '#d97706'; tCtx.lineWidth = 2; tCtx.stroke();
+
+            tCtx.fillStyle = '#92400e';
+            tCtx.font = 'bold 14px "Yuji Mai", serif';
+            tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
+            tCtx.fillText("太鼓", x, y);
+            tCtx.restore();
+        }
+
+        function drawTaikoField() {
+            if (!tCtx) return;
+            const canvasHeight = taikoCanvas.height; const canvasWidth = taikoCanvas.width;
+            const centerY = canvasHeight / 2;
+            const hitX = getHitX();
+            const themeColors = getThemeColors();
+            tCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+            tCtx.fillStyle = themeColors.trackBg; tCtx.fillRect(0, centerY - 55, canvasWidth, 110);
+            tCtx.fillStyle = themeColors.trackBorder;
+            tCtx.fillRect(0, centerY - 55, canvasWidth, 6);
+            tCtx.fillRect(0, centerY + 49, canvasWidth, 6);
+            drawLeftTaikoDrum(Math.min(55, hitX * 0.45), centerY);
+            tCtx.fillStyle = '#0f172a'; tCtx.beginPath(); tCtx.arc(hitX, centerY, 38, 0, Math.PI * 2); tCtx.fill();
+            tCtx.strokeStyle = '#f59e0b'; tCtx.lineWidth = 4; tCtx.stroke();
+        }
+
+        function triggerTaikoHit(hitType) {
+            playTaikoSound(hitType);
+            if (hitType === 'don') drumVisualFeedback.don = 1.0;
+            if (hitType === 'ka') drumVisualFeedback.ka = 1.0;
+
+            if (!isTaikoRunning || isTaikoPaused) return;
+            const currentTime = audioPlayer.currentTime + taikoOffset;
+            const hitX = getHitX();
+            const themeColors = getThemeColors();
+
+            const targetNote = taikoNotes.find(n => !n.hit && !n.missed && n.type === hitType && Math.abs(n.time - currentTime) <= 0.24);
+
+            if (targetNote) {
+                const diff = Math.abs(targetNote.time - currentTime);
+                targetNote.hit = true;
+
+                if (diff <= 0.09) {
+                    taikoPerfect++; taikoScore += 1000 + taikoCombo * 25; taikoCombo++;
+                    soulValue = Math.min(100, soulValue + 2.5);
+                    showTaikoJudgment('良 PERFECT', 'perfect');
+                    createHitParticles(hitX, taikoCanvas.height / 2, '#facc15');
+                    createShockwave(hitX, taikoCanvas.height / 2, themeColors.don);
+                    playTaikoSound('perfect');
+                } else {
+                    taikoGood++; taikoScore += 500 + taikoCombo * 10; taikoCombo++;
+                    soulValue = Math.min(100, soulValue + 1.2);
+                    showTaikoJudgment('可 GOOD', 'good');
+                    createHitParticles(hitX, taikoCanvas.height / 2, '#38bdf8');
+                    createShockwave(hitX, taikoCanvas.height / 2, themeColors.ka);
+                }
+                if (taikoCombo > taikoMaxCombo) taikoMaxCombo = taikoCombo;
+                updateTaikoStatsUI(); updateSoulGaugeUI();
+            }
+        }
+
+        function createHitParticles(x, y, color) {
+            for (let i = 0; i < 16; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                taikoParticles.push({
+                    x: x, y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: Math.random() * 6 + 3,
+                    color: color,
+                    life: 1.0
+                });
+            }
+        }
+
+        function createShockwave(x, y, color) {
+            taikoShockwaves.push({ x: x, y: y, radius: 35, maxRadius: 75, color: color, opacity: 1.0 });
+        }
+
+        function updateAndDrawParticles() {
+            for (let i = taikoParticles.length - 1; i >= 0; i--) {
+                const p = taikoParticles[i];
+                p.x += p.vx; p.y += p.vy; p.life -= 0.04;
+                if (p.life <= 0) { taikoParticles.splice(i, 1); continue; }
+                tCtx.save();
+                tCtx.globalAlpha = p.life;
+                tCtx.fillStyle = p.color;
+                tCtx.beginPath(); tCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2); tCtx.fill();
+                tCtx.restore();
+            }
+        }
+
+        function updateAndDrawShockwaves(centerY) {
+            for (let i = taikoShockwaves.length - 1; i >= 0; i--) {
+                const sw = taikoShockwaves[i];
+                sw.radius += 3.5; sw.opacity -= 0.05;
+                if (sw.opacity <= 0) { taikoShockwaves.splice(i, 1); continue; }
+                tCtx.save();
+                tCtx.globalAlpha = sw.opacity;
+                tCtx.strokeStyle = sw.color; tCtx.lineWidth = 4;
+                tCtx.beginPath(); tCtx.arc(sw.x, centerY, sw.radius, 0, Math.PI * 2); tCtx.stroke();
+                tCtx.restore();
+            }
+        }
+
+        function showTaikoJudgment(text, typeClass) {
+            const overlay = document.getElementById('taiko-judgment-overlay');
+            const hitX = getHitX();
+            overlay.style.left = `${hitX}px`;
+            overlay.textContent = text; overlay.className = `taiko-judgment-overlay ${typeClass}`;
+            overlay.style.opacity = '1'; overlay.style.transform = 'translate(-50%, -60%) scale(1.15)';
+            setTimeout(() => { overlay.style.opacity = '0'; overlay.style.transform = 'translate(-50%, -50%) scale(0.9)'; }, 260);
+        }
+
+        function updateTaikoStatsUI() {
+            document.getElementById('taiko-score').textContent = taikoScore;
+            document.getElementById('taiko-combo').textContent = taikoCombo;
+            const total = taikoPerfect + taikoGood + taikoMiss;
+            const acc = total === 0 ? 100 : Math.round(((taikoPerfect + taikoGood * 0.6) / total) * 100);
+            document.getElementById('taiko-acc').textContent = `${acc}%`;
+        }
+
+        function updateSoulGaugeUI() {
+            const fillElem = document.getElementById('soul-bar-fill');
+            const badgeElem = document.getElementById('soul-badge');
+            fillElem.style.width = `${soulValue}%`;
+
+            if (soulValue >= 80) {
+                badgeElem.classList.add('active');
+                badgeElem.innerHTML = '<i class="fas fa-fire-flame-curved"></i> 魂 (SOUL ON)';
+            } else {
+                badgeElem.classList.remove('active');
+                badgeElem.innerHTML = '<i class="fas fa-fire-flame-curved"></i> 魂 SOUL';
+            }
+        }
+
+        function endTaikoGame() {
+            stopAllGames();
+            const oldHighScore = parseInt(localStorage.getItem('sxhs_taiko_highscore') || '0', 10);
+            if (taikoScore > oldHighScore) {
+                localStorage.setItem('sxhs_taiko_highscore', taikoScore);
+                document.getElementById('taiko-highscore').textContent = taikoScore;
+            }
+
+            let rank = 'C';
+            if (taikoScore >= 32000) rank = 'SS';
+            else if (taikoScore >= 24000) rank = 'S';
+            else if (taikoScore >= 16000) rank = 'A';
+            else if (taikoScore >= 8000) rank = 'B';
+
+            document.getElementById('modal-rank').textContent = rank;
+            document.getElementById('modal-result-details').innerHTML = `
+                <p>最終得分：<span>${taikoScore}</span></p>
+                <p>最高連擊：<span>${taikoMaxCombo}</span></p>
+                <p>魂量達成：<span>${Math.round(soulValue)}%</span></p>
+                <p>良 (PERFECT)：<span>${taikoPerfect}</span></p>
+                <p>可 (GOOD)：<span>${taikoGood}</span></p>
+                <p>不可 (MISS)：<span>${taikoMiss}</span></p>
+            `;
+            document.getElementById('game-over-modal').style.display = 'flex';
+        }
+
+        // ====================================================
+        // 一鍵清除分數功能
+        // ====================================================
+        document.getElementById('btn-clear-score').addEventListener('click', () => {
+            if (confirm('確定要一鍵清除最高分紀錄與當前分數嗎？')) {
+                localStorage.removeItem('sxhs_taiko_highscore');
+                taikoScore = 0; taikoCombo = 0; taikoMaxCombo = 0;
+                taikoPerfect = 0; taikoGood = 0; taikoMiss = 0; soulValue = 0;
+                document.getElementById('taiko-highscore').textContent = '0';
+                updateTaikoStatsUI(); updateSoulGaugeUI();
+                playTaikoSound('miss');
+            }
+        });
+
+        // ====================================================
+        // 控制器與按鍵事件綁定
+        // ====================================================
+        document.getElementById('offset-minus').addEventListener('click', () => {
+            taikoOffset = parseFloat((taikoOffset - 0.05).toFixed(2));
+            document.getElementById('offset-val').textContent = `${taikoOffset > 0 ? '+' : ''}${taikoOffset}s`;
+        });
+        document.getElementById('offset-plus').addEventListener('click', () => {
+            taikoOffset = parseFloat((taikoOffset + 0.05).toFixed(2));
+            document.getElementById('offset-val').textContent = `${taikoOffset > 0 ? '+' : ''}${taikoOffset}s`;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyF' || e.code === 'KeyJ') {
+                document.getElementById('btn-don-left').classList.add('pressed'); triggerTaikoHit('don');
+            } else if (e.code === 'KeyD' || e.code === 'KeyK') {
+                document.getElementById('btn-ka-left').classList.add('pressed'); triggerTaikoHit('ka');
+            } else if (e.code === 'KeyP' || e.code === 'Escape') {
+                togglePauseTaikoGame();
+            }
+        });
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'KeyF' || e.code === 'KeyJ') document.getElementById('btn-don-left').classList.remove('pressed');
+            else if (e.code === 'KeyD' || e.code === 'KeyK') document.getElementById('btn-ka-left').classList.remove('pressed');
+        });
+
+        document.getElementById('btn-don-left').addEventListener('mousedown', () => triggerTaikoHit('don'));
+        document.getElementById('btn-don-left').addEventListener('touchstart', (e) => { e.preventDefault(); triggerTaikoHit('don'); });
+        document.getElementById('btn-ka-left').addEventListener('mousedown', () => triggerTaikoHit('ka'));
+        document.getElementById('btn-ka-left').addEventListener('touchstart', (e) => { e.preventDefault(); triggerTaikoHit('ka'); });
+
+        document.getElementById('taiko-start-btn').addEventListener('click', startTaikoGame);
+        document.getElementById('taiko-pause-btn').addEventListener('click', togglePauseTaikoGame);
+        document.getElementById('taiko-restart-btn').addEventListener('click', startTaikoGame);
+        document.getElementById('modal-close-btn').addEventListener('click', () => {
+            document.getElementById('game-over-modal').style.display = 'none';
+        });
+
+        // ====================================================
+        // 背景浮動圖示
+        // ====================================================
+        function createFloatingIcons() {
+            const icons = ['fa-drum', 'fa-music', 'fa-fire', 'fa-star', 'fa-heart', 'fa-bolt', 'fa-palette', 'fa-pause'];
+            backgroundIconsContainer.innerHTML = '';
+            for (let i = 0; i < 22; i++) {
+                const icon = document.createElement('i');
+                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+                icon.className = `fas ${randomIcon}`;
+                icon.style.left = `${Math.random() * 100}vw`;
+                icon.style.fontSize = `${Math.random() * 45 + 18}px`;
+                icon.style.animationDuration = `${Math.random() * 14 + 8}s`;
+                icon.style.animationDelay = `${Math.random() * 8}s`;
+                backgroundIconsContainer.appendChild(icon);
+            }
+        }
+
+        // ====================================================
+        // 可自由拖曳的吉祥物 (Draggable Mascot)
+        // ====================================================
+        let isDraggingMascot = false;
+        let hasMovedMascot = false;
+        let startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+        let mascotClickCounter = 0;
+
+        function onMascotDragStart(e) {
+            isDraggingMascot = true;
+            hasMovedMascot = false;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            startX = clientX;
+            startY = clientY;
+
+            const rect = mascotContainer.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+
+            mascotContainer.style.bottom = 'auto';
+            mascotContainer.style.right = 'auto';
+            mascotContainer.style.left = `${initialLeft}px`;
+            mascotContainer.style.top = `${initialTop}px`;
+            mascotContainer.style.cursor = 'grabbing';
+        }
+
+        function onMascotDragMove(e) {
+            if (!isDraggingMascot) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+
+            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                hasMovedMascot = true;
+            }
+
+            mascotContainer.style.left = `${initialLeft + dx}px`;
+            mascotContainer.style.top = `${initialTop + dy}px`;
+        }
+
+        function onMascotDragEnd() {
+            if (!isDraggingMascot) return;
+            isDraggingMascot = false;
+            mascotContainer.style.cursor = 'grab';
+        }
+
+        mascotContainer.addEventListener('mousedown', onMascotDragStart);
+        document.addEventListener('mousemove', onMascotDragMove);
+        document.addEventListener('mouseup', onMascotDragEnd);
+
+        mascotContainer.addEventListener('touchstart', onMascotDragStart, { passive: false });
+        document.addEventListener('touchmove', onMascotDragMove, { passive: false });
+        document.addEventListener('touchend', onMascotDragEnd);
+
+        mascotContainer.addEventListener('click', () => {
+            if (hasMovedMascot) return;
+            mascotClickCounter++;
+            const rect = mascotContainer.getBoundingClientRect();
+            createParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            playTaikoSound('don');
+
+            if (mascotClickCounter >= 8) {
+                mascotContainer.classList.add('explode');
+                setTimeout(() => {
+                    mascotContainer.classList.remove('explode');
+                    mascotContainer.style.transform = 'scale(1)';
+                    mascotClickCounter = 0;
+                }, 400);
+            } else {
+                mascotContainer.style.transform = `scale(${1 + mascotClickCounter * 0.1})`;
+            }
+        });
+
+        function createParticles(x, y) {
+            const particleColors = ['#ef4444', '#f59e0b', '#38bdf8', '#10b981', '#ec4899'];
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                document.body.appendChild(particle);
+                const size = Math.random() * 10 + 6;
+                const angle = Math.random() * 360;
+                const velocity = Math.random() * 6 + 3;
+                const dx = Math.cos(angle * Math.PI / 180) * velocity;
+                let dy = Math.sin(angle * Math.PI / 180) * velocity;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = particleColors[Math.floor(Math.random() * particleColors.length)];
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+
+                const animate = () => {
+                    dy += 0.1;
+                    particle.style.left = `${parseFloat(particle.style.left) + dx}px`;
+                    particle.style.top = `${parseFloat(particle.style.top) + dy}px`;
+                    particle.style.opacity = parseFloat(particle.style.opacity || 1) - 0.025;
+                    if (parseFloat(particle.style.opacity) > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                requestAnimationFrame(animate);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            initTaikoCanvas();
+        });
+
+        // 初始化
+        initTheme();
+        createFloatingIcons();
+        initTaikoCanvas();
+    </script>
+</body>
+</html>
