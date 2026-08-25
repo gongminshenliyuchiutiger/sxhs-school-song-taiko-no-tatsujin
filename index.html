@@ -578,10 +578,33 @@
             color: rgba(255, 255, 255, 0.85); font-size: 0.8em; text-align: center; z-index: 10;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+        footer p { margin: 0; }
+        .footer-fb { margin-bottom: 4px; }
+        .fb-link {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            padding: 2px 12px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+        .fb-link:hover {
+            color: #ffffff;
+            background: #1877f2;
+            border-color: #1877f2;
+            box-shadow: 0 0 12px rgba(24, 119, 242, 0.8);
+            transform: translateY(-2px);
+        }
 
         /* 響應式 RWD */
         @media (max-width: 768px) {
-            body { padding: 8px; padding-bottom: 55px; }
+            body { padding: 8px; padding-bottom: 95px; }
             .container { padding: 14px 10px; border-radius: 18px; }
             header h1 { font-size: 1.4em; }
             .taiko-dashboard-grid { grid-template-columns: 1fr; gap: 8px; }
@@ -718,7 +741,14 @@
         <img src="image/LiyuChillGuy.svg" alt="Mascot">
     </div>
 
-    <footer><p>Copyright © Liyuchiutiger Gongminshen</p></footer>
+    <footer>
+        <div class="footer-fb">
+            <a href="https://www.facebook.com/happyliyuchilltiger/" target="_blank" rel="noopener noreferrer" class="fb-link">
+                <i class="fa-brands fa-facebook"></i> 快樂鯉魚秋老虎
+            </a>
+        </div>
+        <p><i class="fa-regular fa-copyright"></i> Copyright © Liyuchiutiger Gongminshen</p>
+    </footer>
 
     <!-- 全域音訊播放器 -->
     <audio id="audio-player" preload="auto"></audio>
